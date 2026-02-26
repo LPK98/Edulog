@@ -114,7 +114,7 @@ html,
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: var(--muted);
+  background: #e0f2fe; /* Changed background color to a light blue. Adjust as needed. */
 }
 .login-form {
   background: #fff;
