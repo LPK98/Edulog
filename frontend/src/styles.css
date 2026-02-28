@@ -1,3 +1,38 @@
+/* DareStart page styles */
+.dare-start-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f0fdfa 0%, #e0e7ff 100%);
+}
+
+.dare-start-container h1 {
+  font-size: 2.5rem;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.dare-start-container p {
+  font-size: 1.2rem;
+  margin-bottom: 32px;
+}
+
+.start-dare-btn {
+  padding: 14px 36px;
+  font-size: 1.1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
+}
+.start-dare-btn:hover {
+  background: #ffb84d;
+}
 :root {
   --sidebar-bg: #2f3133;
   --accent: #ff9a20;

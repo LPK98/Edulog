@@ -14,6 +14,7 @@ import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ApiProvider } from "./contexts/ApiContext";
+import DareStart from "./pages/DareStart";
 
 function PrivateRoutes() {
   const { user } = useAuth();
@@ -41,6 +42,7 @@ export default function App() {
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/dare" element={<DareStart />} />
             <Route path="/*" element={<PrivateRoutes />} />
           </Routes>
         </Router>
