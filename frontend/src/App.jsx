@@ -17,10 +17,21 @@ import { ApiProvider } from "./contexts/ApiContext";
 import DareStart from "./pages/DareStart";
 
 function PrivateRoutes() {
-  const { user } = useAuth();
+  const { user, loading, isStudent } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner" />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   if (!user) return <Navigate to="/login" replace />;
+
   return (
-    <>
+    <div className="app-layout">
       <Sidebar />
       <main className="main-area">
         <Routes>
@@ -31,7 +42,7 @@ function PrivateRoutes() {
           <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </main>
-    </>
+    </div>
   );
 }
 
