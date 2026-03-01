@@ -1135,29 +1135,45 @@ textarea {
   color: var(--text);
 }
 
-/* ====================== GRADE REPORTS ====================== */
-.report-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 24px;
-}
-.report-panel {
+/* ====================== GRADE REPORTS (Full-Screen) ====================== */
+.report-fullscreen {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  height: calc(100vh - 64px);
+  min-height: 0;
+  position: relative;
+  z-index: 1;
 }
-.report-header {
+
+/* Top bar */
+.report-topbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 0 20px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 0;
+  flex-shrink: 0;
 }
-.report-header h2 {
-  font-size: 18px;
-  font-weight: 700;
+.report-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.report-topbar-icon {
+  font-size: 22px;
   color: var(--accent);
-  letter-spacing: 2px;
 }
-.btn-download {
+.report-topbar-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.5px;
+}
+.btn-download-modern {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 10px 24px;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   border: none;
@@ -1165,47 +1181,448 @@ textarea {
   color: var(--white);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
   transition: var(--transition);
 }
-.btn-download:hover:not(:disabled) {
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+.btn-download-modern:hover:not(:disabled) {
+  box-shadow: 0 4px 24px rgba(0, 212, 255, 0.35);
   transform: translateY(-1px);
 }
-.btn-download:disabled {
+.btn-download-modern:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-download-modern svg {
+  font-size: 15px;
 }
 
-.gpa-card {
+/* Body layout */
+.report-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: 0;
+  padding-top: 20px;
+}
+
+/* Sidebar (admin/teacher student list) */
+.report-sidebar {
+  width: 280px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 20px;
+  border-right: 1px solid var(--glass-border);
+  margin-right: 24px;
+  overflow: hidden;
+}
+.report-search-wrap {
+  position: relative;
+}
+.report-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  font-size: 14px;
+  pointer-events: none;
+}
+.report-search-input {
+  width: 100%;
+  padding: 10px 14px 10px 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: var(--transition);
+}
+.report-search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+}
+.report-search-input::placeholder {
+  color: var(--text-dim);
+}
+.report-student-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.report-student-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.report-student-item:hover {
+  background: var(--glass-hover);
+}
+.report-student-item.active {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+.report-student-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  flex-shrink: 0;
+}
+.report-student-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.report-student-name {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.report-student-id {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.report-empty-list {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 24px 0;
+  font-size: 13px;
+}
+
+/* Main report area */
+.report-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 24px;
+}
+.report-main-full {
+  max-width: 100%;
+}
+
+/* Summary grid (profile + stat cards) */
+.report-summary-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 16px;
+}
+.report-profile-card {
   background: var(--glass);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
-  border: 1px solid rgba(0, 212, 255, 0.15);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  padding: 20px 28px;
+  padding: 24px;
   display: flex;
   align-items: center;
   gap: 16px;
 }
-.gpa-label {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 2px;
-}
-.gpa-value {
-  font-size: 28px;
+.report-avatar-lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
   font-weight: 800;
-  color: var(--accent);
-  text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  color: var(--white);
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
 }
-
-.section-title {
-  font-size: 16px;
+.report-profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.report-profile-name {
+  font-size: 18px;
   font-weight: 700;
   color: var(--white);
-  margin-top: 8px;
-  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.report-profile-id {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Stat cards */
+.report-stat-card {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: var(--transition);
+}
+.report-stat-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow-glow);
+}
+.report-stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.report-stat-icon.gpa-icon {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent);
+}
+.report-stat-icon.subjects-icon {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--accent-2);
+}
+.report-stat-icon.att-icon {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+}
+.report-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.report-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.report-stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--white);
+}
+
+/* Section titles */
+.report-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.report-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+.report-section-title svg {
+  color: var(--accent);
+}
+
+/* Grades table (proper HTML table) */
+.report-table-wrap {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.report-table thead tr {
+  background: rgba(0, 212, 255, 0.05);
+  border-bottom: 1px solid var(--glass-border);
+}
+.report-table th {
+  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: left;
+}
+.report-table th.th-num {
+  width: 50px;
+  text-align: center;
+}
+.report-table th.th-grade,
+.report-table th.th-points {
+  width: 100px;
+  text-align: center;
+}
+.report-table th.th-semester {
+  width: 120px;
+  text-align: center;
+}
+.report-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: var(--transition);
+}
+.report-table tbody tr:last-child {
+  border-bottom: none;
+}
+.report-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.report-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.td-num {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.td-subject {
+  color: var(--text);
+  font-weight: 500;
+}
+.td-grade {
+  text-align: center;
+}
+.grade-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1px solid;
+}
+.td-points {
+  text-align: center;
+  font-weight: 600;
+  color: var(--text);
+}
+.td-semester {
+  text-align: center;
+}
+.semester-tag {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--accent-2);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+.td-empty {
+  text-align: center;
+  padding: 32px 16px !important;
+  color: var(--text-dim);
+}
+
+/* Attendance grid */
+.report-attendance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.report-att-card {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  transition: var(--transition);
+}
+.report-att-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.report-att-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.report-att-subject {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+.report-att-pct {
+  font-size: 14px;
+  font-weight: 700;
+}
+.report-att-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.report-att-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+.report-empty-att {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-dim);
+  padding: 32px 0;
+}
+
+/* Placeholder when no student selected */
+.report-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-dim);
+  text-align: center;
+}
+.report-placeholder svg {
+  opacity: 0.3;
+}
+.report-placeholder h3 {
+  font-size: 18px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.report-placeholder p {
+  font-size: 14px;
+  margin: 0;
 }
 
 /* ====================== ANALYTICS ====================== */
@@ -1323,6 +1740,9 @@ textarea {
   .analytics-grid {
     grid-template-columns: 1fr;
   }
+  .report-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 @media (max-width: 900px) {
   .sidebar {
@@ -1353,6 +1773,35 @@ textarea {
   .login-illustration {
     display: none;
   }
+  /* Grade reports responsive */
+  .report-fullscreen {
+    height: auto;
+    min-height: calc(100vh - 64px);
+  }
+  .report-body {
+    flex-direction: column;
+  }
+  .report-sidebar {
+    width: 100%;
+    min-width: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
+    margin-right: 0;
+    margin-bottom: 20px;
+    padding-right: 0;
+    padding-bottom: 16px;
+    max-height: 240px;
+  }
+  .report-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .report-table th.th-semester,
+  .report-table td.td-semester {
+    display: none;
+  }
+  .report-attendance-grid {
+    grid-template-columns: 1fr;
+  }
 }
 @media (max-width: 600px) {
   .sidebar {
@@ -1374,5 +1823,37 @@ textarea {
   }
   .form-controls {
     flex-direction: column;
+  }
+  /* Grade reports mobile */
+  .report-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .btn-download-modern {
+    width: 100%;
+    justify-content: center;
+  }
+  .report-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .report-profile-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .report-profile-id {
+    justify-content: center;
+  }
+  .report-table th.th-num,
+  .report-table td.td-num,
+  .report-table th.th-points,
+  .report-table td.td-points {
+    display: none;
+  }
+  .report-table th,
+  .report-table td {
+    padding: 10px 12px;
+    font-size: 13px;
   }
 }

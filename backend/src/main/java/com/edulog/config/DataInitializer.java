@@ -52,8 +52,8 @@ public class DataInitializer implements CommandLineRunner {
                 "Wanduramba, Galle", "jineth@edu.lk", "+94706598632", "45 Batch", "CS-A");
         s2 = studentRepository.save(s2);
 
-        Student s3 = new Student("SC/2022/12881", "Geethika Mabula", "Female", "1999-11-08",
-                "Mahiyanganaya, Dambana", "geethika@edu.lk", "+94706598632", "45 Batch", "CS-A");
+        Student s3 = new Student("SC/2022/12881", "Lal Pushpakumara", "Male", "1999-11-08",
+                "Mahiyanganaya, Dambana", "lal@edu.lk", "+94706598632", "45 Batch", "CS-A");
         s3 = studentRepository.save(s3);
 
         Student s4 = new Student("SC/2022/12882", "Kasun Perera", "Male", "2000-01-15",
@@ -67,7 +67,7 @@ public class DataInitializer implements CommandLineRunner {
         List<Student> allStudents = List.of(s1, s2, s3, s4, s5);
 
         // Create admin user
-        User admin = new User("admin", passwordEncoder.encode("admin123"), "Geethika Mabula",
+        User admin = new User("admin", passwordEncoder.encode("admin123"), "Lal Pushpakumara",
                 "admin@edulog.lk", Role.ADMIN);
         admin.setPhone("+94706598632");
         admin.setAddress("Mahiyanganaya, Dambana.");
@@ -88,8 +88,8 @@ public class DataInitializer implements CommandLineRunner {
         studentUser1.setAddress("Wanduramba, Galle.");
         userRepository.save(studentUser1);
 
-        User studentUser2 = new User("geethika", passwordEncoder.encode("student123"), "Geethika Mabula",
-                "geethika@edu.lk", Role.STUDENT);
+        User studentUser2 = new User("lal", passwordEncoder.encode("student123"), "Lal Pushpakumara",
+                "lal@edu.lk", Role.STUDENT);
         studentUser2.setStudent(s3);
         studentUser2.setPhone("+94706598632");
         studentUser2.setAddress("Mahiyanganaya, Dambana.");
@@ -160,7 +160,7 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("=== EduLog Demo Data Initialized ===");
         System.out.println("Admin:   admin / admin123");
         System.out.println("Teacher: teacher / teacher123");
-        System.out.println("Students: jineth / student123, geethika / student123, chandrasekara / student123");
+        System.out.println("Students: jineth / student123, lal / student123, chandrasekara / student123");
         System.out.println("=====================================");
     }
 }
