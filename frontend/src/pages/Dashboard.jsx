@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useApi } from "../contexts/ApiContext";
-import { FaBell, FaDownload, FaUserPlus, FaUserMinus } from "react-icons/fa";
+import { FaBell, FaDownload } from "react-icons/fa";
 
 function Calendar() {
   const now = new Date();
@@ -59,27 +59,50 @@ function Calendar() {
   );
 }
 
-function AdminDashboard({ stats }) {
+function AdminDashboard({ stats, api }) {
+  const handleExport = async () => {
+    // Export all student data as a summary
+    try {
+      const res = await api.get("/students");
+      const students = res.data;
+      let csv = "Student ID,Name,Batch,Group,GPA\n";
+      students.forEach((s) => {
+        csv += `${s.studentId},${s.name},${s.batch},${s.groupName},${s.gpa}\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "students_report.csv";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Failed to export");
+    }
+  };
+
   return (
     <div className="dashboard-content">
       <div className="dashboard-top">
         <Calendar />
-        <div className="profile-card-right">
+        <div className="profile-card-dash">
           <div className="profile-avatar-large" />
           <p className="profile-role">{stats.userRole}</p>
-          <p className="profile-title">Main Generator</p>
+          <p className="profile-title">{stats.userName}</p>
         </div>
       </div>
 
       <div className="dashboard-actions">
         <div className="action-group">
           <FaDownload className="action-icon" />
-          <button className="btn-action btn-dark">EXPORT REPORT</button>
-          <button className="btn-action btn-orange">ADD NEW USER</button>
-          <button className="btn-action btn-orange">REMOVE USER</button>
+          <button className="btn-action btn-dark" onClick={handleExport}>
+            EXPORT REPORT
+          </button>
         </div>
 
-        <div className="stats-card card-orange">
+        <div className="stats-card">
           <h3>Quick Stats</h3>
           <div className="stat-row">
             <span>Total Students</span>
@@ -100,7 +123,7 @@ function AdminDashboard({ stats }) {
           </div>
         </div>
 
-        <div className="stats-card card-orange">
+        <div className="stats-card">
           <h3>Personal Info</h3>
           <p>{stats.userName}</p>
           <p>{stats.userPhone || "-"}</p>
@@ -111,26 +134,53 @@ function AdminDashboard({ stats }) {
   );
 }
 
-function StudentDashboard({ stats }) {
+function StudentDashboard({ stats, api }) {
+  const handleDownloadPdf = async () => {
+    if (!stats.studentInfo?.studentId) return;
+    // Find the numeric student ID by searching students
+    try {
+      const res = await api.get("/students");
+      const student = res.data.find(
+        (s) => s.studentId === stats.studentInfo.studentId,
+      );
+      if (!student) return;
+      const pdfRes = await api.get(`/reports/student/${student.id}/pdf`, {
+        responseType: "blob",
+      });
+      const url = URL.createObjectURL(new Blob([pdfRes.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `report_${student.studentId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Failed to download report");
+    }
+  };
+
   return (
     <div className="dashboard-content">
       <div className="dashboard-top">
         <div className="search-bar-wrapper">
           <input type="text" placeholder="Search..." className="search-input" />
         </div>
-        <div className="profile-card-right">
+        <div className="profile-card-dash">
           <div className="profile-avatar-large" />
           <p className="profile-role">Student</p>
-          <p className="profile-title">Main Generator</p>
+          <p className="profile-title">{stats.userName}</p>
         </div>
       </div>
 
       <div className="dashboard-actions">
-        <div className="student-report-card card-orange">
+        <div className="student-report-card">
           <h3>MY REPORT</h3>
           <FaDownload className="action-icon" />
-          <button className="btn-action btn-dark">Download PDF</button>
-          <div className="performance-box card-orange">
+          <button className="btn-action btn-dark" onClick={handleDownloadPdf}>
+            Download PDF
+          </button>
+          <div className="performance-box">
             <h4>Performance</h4>
             <p className="gpa-display">
               GPA : {stats.gpa?.toFixed(3) || "0.000"}
@@ -138,7 +188,7 @@ function StudentDashboard({ stats }) {
           </div>
         </div>
 
-        <div className="stats-card card-orange">
+        <div className="stats-card">
           <h3>Attendance</h3>
           {stats.subjectAttendances?.map((sa) => (
             <div key={sa.subjectName} className="attendance-bar-row">
@@ -153,7 +203,7 @@ function StudentDashboard({ stats }) {
           ))}
         </div>
 
-        <div className="stats-card card-orange">
+        <div className="stats-card">
           <h3>Personal Info</h3>
           <p>{stats.studentInfo?.name || stats.userName}</p>
           <p>{stats.studentInfo?.batch || "-"}</p>
@@ -192,15 +242,15 @@ export default function Dashboard() {
       <header className="welcome">
         <div className="welcome-left">
           <h1>Welcome</h1>
-          <h2>{user?.name || "Guest"};</h2>
+          <h2>{user?.name || "Guest"}</h2>
         </div>
         <FaBell className="notification-bell" />
       </header>
 
       {isStudent ? (
-        <StudentDashboard stats={stats} />
+        <StudentDashboard stats={stats} api={api} />
       ) : (
-        <AdminDashboard stats={stats} />
+        <AdminDashboard stats={stats} api={api} />
       )}
     </div>
   );

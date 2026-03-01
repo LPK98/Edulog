@@ -8,7 +8,6 @@ import {
   FaChartBar,
   FaChartPie,
   FaSignOutAlt,
-  FaFileExport,
 } from "react-icons/fa";
 
 export default function Sidebar() {
@@ -43,28 +42,28 @@ export default function Sidebar() {
         <span className="brand-log">LOG</span>
       </div>
 
-      <nav className="sidebar-nav">
+      <nav>
         <ul>
           {links.map((link) => (
             <li key={link.to + link.label}>
               <NavLink
                 to={link.to}
                 end={link.end}
-                className={({ isActive }) =>
-                  `sidebar-link ${isActive ? "active" : ""}`
-                }
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
-                <span className="sidebar-icon">{link.icon}</span>
-                <span className="sidebar-label">{link.label}</span>
+                {link.icon}
+                <span>{link.label}</span>
               </NavLink>
             </li>
           ))}
         </ul>
       </nav>
 
-      <div className="sidebar-logout" onClick={handleLogout}>
-        <FaSignOutAlt className="sidebar-icon" />
-        <span>Logout</span>
+      <div className="sidebar-bottom">
+        <button className="logout-btn" onClick={handleLogout}>
+          <FaSignOutAlt />
+          <span>Logout</span>
+        </button>
       </div>
     </aside>
   );

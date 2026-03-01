@@ -76,4 +76,8 @@ public class DashboardService {
 
         return stats;
     }
+
+    public List<Subject> getAllSubjects() {
+        return subjectRepository.findAll();
+    }
 }

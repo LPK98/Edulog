@@ -153,7 +153,9 @@ export default function GradeReports() {
             {gpa !== null && (
               <div className="gpa-card">
                 <span className="gpa-label">GPA</span>
-                <span className="gpa-value">{gpa}</span>
+                <span className="gpa-value">
+                  {typeof gpa === "number" ? gpa.toFixed(3) : gpa}
+                </span>
               </div>
             )}
 
@@ -167,7 +169,7 @@ export default function GradeReports() {
               </div>
               {grades.map((g) => (
                 <div className="table-row" key={g.id}>
-                  <div className="col-subject">{g.subjectName}</div>
+                  <div className="col-subject">{g.subject?.name || "—"}</div>
                   <div className="col-grade">{g.grade}</div>
                   <div className="col-points">{g.gradePoint}</div>
                   <div className="col-semester">{g.semester}</div>

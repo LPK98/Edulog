@@ -54,7 +54,7 @@ export default function AddGrades() {
       await api.post("/grades", {
         studentId: selectedStudent.id,
         semester,
-        entries,
+        grades: entries,
       });
       setMessage("Grades saved successfully!");
       setGrades({});

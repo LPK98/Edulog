@@ -14,7 +14,7 @@ import {
   Cell,
 } from "recharts";
 
-const COLORS = ["#ff9a20", "#4caf50", "#2196f3", "#e91e63", "#9c27b0"];
+const COLORS = ["#00d4ff", "#7c3aed", "#22c55e", "#f472b6", "#f59e0b"];
 
 export default function Analytics() {
   const api = useApi();
@@ -28,17 +28,15 @@ export default function Analytics() {
       api.get("/dashboard/subjects"),
     ])
       .then(([distRes, subRes]) => {
-        // Grade distribution for pie chart: { A: 12, B: 8, ... }
+        // Grade distribution is flat: { A: 12, B: 8, C: 5, ... }
         const dist = distRes.data;
         const pieData = Object.entries(dist).map(([name, value]) => ({
           name,
-          value,
+          value: Number(value),
         }));
         setDistribution(pieData);
 
-        // Build per-subject bar data from subjects
         const subs = subRes.data || [];
-        // Fetch attendance for each subject (we'll use a summary approach)
         setSubjectData(subs.map((s) => ({ name: s.code || s.name, id: s.id })));
       })
       .catch(() => {})
@@ -95,7 +93,7 @@ export default function Analytics() {
                 <XAxis dataKey="name" />
                 <YAxis allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="value" fill="#ff9a20" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="value" fill="#00d4ff" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (

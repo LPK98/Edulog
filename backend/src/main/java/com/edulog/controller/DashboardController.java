@@ -2,7 +2,6 @@ package com.edulog.controller;
 
 import com.edulog.dto.DashboardStats;
 import com.edulog.model.Subject;
-import com.edulog.repository.SubjectRepository;
 import com.edulog.service.DashboardService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,9 @@ import java.util.List;
 public class DashboardController {
 
     private final DashboardService dashboardService;
-    private final SubjectRepository subjectRepository;
 
-    public DashboardController(DashboardService dashboardService, SubjectRepository subjectRepository) {
+    public DashboardController(DashboardService dashboardService) {
         this.dashboardService = dashboardService;
-        this.subjectRepository = subjectRepository;
     }
 
     @GetMapping("/stats")
@@ -28,6 +25,6 @@ public class DashboardController {
 
     @GetMapping("/subjects")
     public List<Subject> getSubjects() {
-        return subjectRepository.findAll();
+        return dashboardService.getAllSubjects();
     }
 }
