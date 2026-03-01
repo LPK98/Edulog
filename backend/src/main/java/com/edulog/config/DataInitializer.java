@@ -46,27 +46,22 @@ public class DataInitializer implements CommandLineRunner {
         // Create students
         Student s1 = new Student("SC/2022/12879", "A.D.V.Chandrasekara", "Male", "1999-05-14",
                 "Kandy, Sri Lanka", "chandrasekara@edu.lk", "+94712345678", "45 Batch", "CS-A");
-        s1.setGpa(2.7);
         s1 = studentRepository.save(s1);
 
         Student s2 = new Student("SC/2022/12880", "Jineth Bosilu", "Male", "2000-03-22",
                 "Wanduramba, Galle", "jineth@edu.lk", "+94706598632", "45 Batch", "CS-A");
-        s2.setGpa(3.756);
         s2 = studentRepository.save(s2);
 
         Student s3 = new Student("SC/2022/12881", "Geethika Mabula", "Female", "1999-11-08",
                 "Mahiyanganaya, Dambana", "geethika@edu.lk", "+94706598632", "45 Batch", "CS-A");
-        s3.setGpa(3.2);
         s3 = studentRepository.save(s3);
 
         Student s4 = new Student("SC/2022/12882", "Kasun Perera", "Male", "2000-01-15",
                 "Colombo 07", "kasun@edu.lk", "+94771234567", "45 Batch", "CS-B");
-        s4.setGpa(3.1);
         s4 = studentRepository.save(s4);
 
         Student s5 = new Student("SC/2022/12883", "Nimali Silva", "Female", "1999-07-20",
                 "Negombo", "nimali@edu.lk", "+94769876543", "45 Batch", "CS-A");
-        s5.setGpa(3.5);
         s5 = studentRepository.save(s5);
 
         List<Student> allStudents = List.of(s1, s2, s3, s4, s5);
@@ -121,6 +116,15 @@ public class DataInitializer implements CommandLineRunner {
                 Grade grade = new Grade(allStudents.get(i), allSubjects.get(j),
                         gradeData[i][j], "Semester 1", "admin");
                 gradeRepository.save(grade);
+            }
+        }
+
+        // Recalculate GPA from actual grades for each student
+        for (Student student : allStudents) {
+            Double gpa = gradeRepository.calculateGpaByStudentId(student.getId());
+            if (gpa != null) {
+                student.setGpa(Math.round(gpa * 1000.0) / 1000.0);
+                studentRepository.save(student);
             }
         }
 

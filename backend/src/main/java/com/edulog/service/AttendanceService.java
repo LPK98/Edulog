@@ -37,6 +37,10 @@ public class AttendanceService {
             Student student = studentRepository.findById(entry.getStudentId())
                     .orElseThrow(() -> new RuntimeException("Student not found: " + entry.getStudentId()));
 
+            // Remove existing record for same student/subject/date to prevent duplicates
+            attendanceRepository.findByStudentIdAndSubjectIdAndDate(student.getId(), subject.getId(), date)
+                    .ifPresent(attendanceRepository::delete);
+
             Attendance attendance = new Attendance(student, subject, date,
                     Attendance.AttendanceStatus.valueOf(entry.getStatus()), markedBy);
             records.add(attendanceRepository.save(attendance));

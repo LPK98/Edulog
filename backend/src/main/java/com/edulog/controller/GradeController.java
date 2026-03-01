@@ -34,12 +34,12 @@ public class GradeController {
     }
 
     @GetMapping("/student/{studentId}/gpa")
-    public Map<String, Double> getGpa(@PathVariable Long studentId) {
-        return Map.of("gpa", gradeService.calculateGpa(studentId));
+    public Double getGpa(@PathVariable Long studentId) {
+        return gradeService.calculateGpa(studentId);
     }
 
     @GetMapping("/distribution")
-    public Map<String, Map<String, Long>> getDistribution() {
-        return gradeService.getGradeDistribution();
+    public Map<String, Long> getDistribution() {
+        return gradeService.getGradeDistributionFlat();
     }
 }

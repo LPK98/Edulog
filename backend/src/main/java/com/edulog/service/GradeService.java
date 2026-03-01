@@ -72,4 +72,13 @@ public class GradeService {
         }
         return distribution;
     }
+
+    public Map<String, Long> getGradeDistributionFlat() {
+        List<Grade> allGrades = gradeRepository.findAll();
+        Map<String, Long> flat = new LinkedHashMap<>();
+        for (Grade g : allGrades) {
+            flat.merge(g.getGrade(), 1L, Long::sum);
+        }
+        return flat;
+    }
 }
