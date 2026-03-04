@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
@@ -18,6 +19,15 @@ import DareStart from "./pages/DareStart";
 
 function PrivateRoutes() {
   const { user, loading, isStudent } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+
+  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
+
+  // Close sidebar on route change (mobile)
+  React.useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -31,9 +41,26 @@ function PrivateRoutes() {
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className="app-layout">
-      <Sidebar />
+    <div className={`app-layout ${sidebarOpen ? "sidebar-open" : ""}`}>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="sidebar-overlay" onClick={closeSidebar} />
+      )}
+      <Sidebar
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen((v) => !v)}
+      />
       <main className="main-area">
+        {/* Mobile hamburger */}
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setSidebarOpen((v) => !v)}
+          aria-label="Toggle menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/attendance" element={<MarkAttendance />} />

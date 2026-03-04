@@ -87,14 +87,19 @@ textarea {
 .app-layout {
   display: flex;
   min-height: 100vh;
+  height: 100vh;
   background: var(--bg-primary);
+  overflow: hidden;
 }
 .main-area {
   flex: 1;
-  padding: 32px 40px;
+  min-width: 0;
+  padding: clamp(16px, 3vw, 40px);
   background: var(--bg-primary);
   overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
+  height: 100vh;
 }
 .main-area::before {
   content: "";
@@ -112,19 +117,70 @@ textarea {
   z-index: 0;
 }
 
+/* ====================== MOBILE MENU BUTTON ====================== */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  transition: var(--transition);
+}
+.mobile-menu-btn span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+.mobile-menu-btn:hover {
+  background: var(--glass-hover);
+  border-color: var(--accent);
+}
+.mobile-menu-btn:hover span {
+  background: var(--accent);
+}
+
+/* ====================== SIDEBAR OVERLAY ====================== */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
+
 /* ====================== SIDEBAR ====================== */
 .sidebar {
-  width: 280px;
-  min-height: 100vh;
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   border-right: 1px solid var(--glass-border);
   color: #fff;
-  padding: 32px 20px;
+  padding: 28px 18px;
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow-y: auto;
+  flex-shrink: 0;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.3s ease;
 }
 .sidebar::after {
   content: "";
@@ -267,12 +323,14 @@ textarea {
 .page {
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 100%;
 }
 .page-title {
-  font-size: 26px;
+  font-size: clamp(20px, 3vw, 26px);
   font-weight: 700;
   color: var(--white);
-  margin-bottom: 28px;
+  margin-bottom: clamp(16px, 2vw, 28px);
   letter-spacing: 0.5px;
 }
 
@@ -336,9 +394,9 @@ textarea {
 
 .login-container {
   display: flex;
-  width: 900px;
-  max-width: 95vw;
+  width: min(900px, 95vw);
   min-height: 520px;
+  max-height: 90vh;
   background: var(--glass);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
@@ -517,12 +575,14 @@ textarea {
 .dashboard {
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 .welcome {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 32px;
+  margin-bottom: clamp(16px, 2vw, 32px);
+  width: 100%;
 }
 .welcome-left h1 {
   font-size: 14px;
@@ -553,12 +613,13 @@ textarea {
 .dashboard-content {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: clamp(16px, 2vw, 28px);
+  width: 100%;
 }
 .dashboard-top {
   display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 24px;
+  grid-template-columns: 1fr minmax(220px, 300px);
+  gap: clamp(16px, 2vw, 24px);
 }
 
 /* Calendar */
@@ -650,8 +711,8 @@ textarea {
 /* Dashboard action area */
 .dashboard-actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(16px, 2vw, 24px);
 }
 .action-group {
   background: var(--glass);
@@ -875,8 +936,11 @@ textarea {
   -webkit-backdrop-filter: var(--blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   margin-top: 16px;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 .table-head {
   display: flex;
@@ -888,6 +952,7 @@ textarea {
   color: var(--accent);
   letter-spacing: 1px;
   text-transform: uppercase;
+  min-width: 500px;
 }
 .table-row {
   display: flex;
@@ -898,6 +963,7 @@ textarea {
   transition: var(--transition);
   cursor: pointer;
   align-items: center;
+  min-width: 500px;
 }
 .table-row:last-child {
   border-bottom: none;
@@ -954,9 +1020,9 @@ textarea {
 /* ====================== MARK ATTENDANCE ====================== */
 .student-detail-section {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  margin-bottom: clamp(16px, 2vw, 24px);
 }
 .attendance-form {
   display: flex;
@@ -1058,9 +1124,9 @@ textarea {
 /* ====================== ADD GRADES ====================== */
 .grade-top-row {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 24px;
-  margin-bottom: 24px;
+  grid-template-columns: minmax(240px, 280px) 1fr;
+  gap: clamp(16px, 2vw, 24px);
+  margin-bottom: clamp(16px, 2vw, 24px);
 }
 .grade-profile {
   align-self: start;
@@ -1139,10 +1205,11 @@ textarea {
 .report-fullscreen {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 64px);
+  height: calc(100vh - clamp(32px, 6vw, 80px));
   min-height: 0;
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 /* Top bar */
@@ -1315,8 +1382,9 @@ textarea {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: clamp(16px, 2vw, 24px);
   padding-bottom: 24px;
+  width: 100%;
 }
 .report-main-full {
   max-width: 100%;
@@ -1325,7 +1393,7 @@ textarea {
 /* Summary grid (profile + stat cards) */
 .report-summary-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
 }
 .report-profile-card {
@@ -1458,10 +1526,14 @@ textarea {
   -webkit-backdrop-filter: var(--blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 .report-table {
   width: 100%;
+  min-width: 500px;
   border-collapse: collapse;
 }
 .report-table thead tr {
@@ -1553,7 +1625,7 @@ textarea {
 /* Attendance grid */
 .report-attendance-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: 12px;
 }
 .report-att-card {
@@ -1628,8 +1700,8 @@ textarea {
 /* ====================== ANALYTICS ====================== */
 .analytics-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+  gap: clamp(16px, 2vw, 24px);
 }
 .chart-card {
   background: var(--glass);
@@ -1733,35 +1805,56 @@ textarea {
 }
 
 /* ====================== RESPONSIVE ====================== */
-@media (max-width: 1200px) {
-  .dashboard-actions {
-    grid-template-columns: 1fr 1fr;
+
+/* Large screens - ensure content fills space */
+@media (min-width: 1600px) {
+  .report-summary-grid {
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
   }
+  .dashboard-actions {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet landscape & small desktops */
+@media (max-width: 1200px) {
   .analytics-grid {
     grid-template-columns: 1fr;
   }
   .report-summary-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
+
+/* Tablet portrait */
 @media (max-width: 900px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
+  .sidebar-overlay {
+    display: block;
+  }
   .sidebar {
-    width: 220px;
-    padding: 24px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    transform: translateX(-100%);
+    height: 100vh;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+  }
+  .sidebar.sidebar--open {
+    transform: translateX(0);
   }
   .main-area {
     padding: 20px 24px;
+    padding-top: 68px; /* Space for hamburger */
+    width: 100%;
   }
   .dashboard-top {
     grid-template-columns: 1fr;
   }
-  .dashboard-actions {
-    grid-template-columns: 1fr;
-  }
   .grade-top-row {
-    grid-template-columns: 1fr;
-  }
-  .report-layout {
     grid-template-columns: 1fr;
   }
   .student-detail-section {
@@ -1776,7 +1869,7 @@ textarea {
   /* Grade reports responsive */
   .report-fullscreen {
     height: auto;
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - 100px);
   }
   .report-body {
     flex-direction: column;
@@ -1793,7 +1886,7 @@ textarea {
     max-height: 240px;
   }
   .report-summary-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
   .report-table th.th-semester,
   .report-table td.td-semester {
@@ -1802,24 +1895,20 @@ textarea {
   .report-attendance-grid {
     grid-template-columns: 1fr;
   }
+  .welcome {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .notification-bell {
+    align-self: flex-end;
+  }
 }
+
+/* Small screens / phones */
 @media (max-width: 600px) {
-  .sidebar {
-    width: 60px;
-    padding: 16px 8px;
-  }
-  .sidebar nav a span:last-child {
-    display: none;
-  }
-  .brand {
-    font-size: 18px;
-    text-align: center;
-  }
-  .brand-log {
-    display: none;
-  }
   .main-area {
     padding: 16px;
+    padding-top: 64px;
   }
   .form-controls {
     flex-direction: column;
@@ -1855,5 +1944,41 @@ textarea {
   .report-table td {
     padding: 10px 12px;
     font-size: 13px;
+  }
+  .login-container {
+    min-height: auto;
+    border-radius: 16px;
+  }
+  .login-card {
+    padding: 32px 24px;
+  }
+  .login-title {
+    font-size: 22px;
+  }
+  .page-title {
+    font-size: 20px;
+  }
+  .calendar-table th,
+  .calendar-table td {
+    padding: 6px 2px;
+    font-size: 11px;
+  }
+  .brand {
+    font-size: 22px;
+  }
+  .glass-card {
+    padding: 16px;
+  }
+  .stats-card {
+    padding: 16px;
+  }
+  .action-group {
+    padding: 16px;
+  }
+  .student-selector {
+    padding: 12px;
+  }
+  .chart-card {
+    padding: 16px;
   }
 }
