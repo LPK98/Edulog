@@ -10,7 +10,7 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onToggle }) {
   const { user, logout, isStudent } = useAuth();
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export default function Sidebar() {
   const links = isStudent ? studentLinks : adminTeacherLinks;
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <div className="brand">
         <span className="brand-edu">EDU</span>
         <span className="brand-log">LOG</span>
